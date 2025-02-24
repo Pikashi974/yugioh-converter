@@ -88,7 +88,16 @@ function App() {
       <div className="card m-5">
         <h3 className="card-header">Decklist</h3>
         <div className="card-body d-grid" style={gridStyle}></div>
-        <div className="card-footer d-grid" style={gridStyle}></div>
+        <div
+          className="card-footer d-grid"
+          style={gridStyle}
+          id="footerExtra"
+        ></div>
+        <div
+          className="card-footer d-grid"
+          style={gridStyle}
+          id="footerSide"
+        ></div>
       </div>
     </div>
   );
@@ -101,13 +110,12 @@ async function convertText(filetext, deckname) {
   let infos = filetext.split("\n\n");
   infos = infos.map((element) => element.split("\n"));
   //   console.log(infos);
-  let cardOutput = `#created by Javascript
-  #main
-  ${infos[0].map((element) => getID(element)).join("")}
-  ${infos[1].map((element) => getID(element)).join("")}
-  #extra
-  ${infos[2].map((element) => getID(element)).join("")}
-  !side
+  let cardOutput = `#created by Javascript\n#main\n${infos[0]
+    .map((element) => getID(element))
+    .join("")}\n#extra\n${infos[1]
+    .map((element) => getID(element))
+    .join("")}\n!side\n${infos[2].map((element) => getID(element)).join("")}
+
 `;
   saveData(cardOutput, deckname + ".ydk");
 }
@@ -120,14 +128,14 @@ function getID(text) {
     let numberCards = text.match(/([0-9]+) ([^\n]+)/)[1];
     // console.log(numberCards);
     let cardName = text.match(/([0-9]+) ([^\n]+)/)[2];
-    cardName = cardName.replaceAll("’", "'").replaceAll("–", "-");
+    cardName = cardName.replaceAll("’", "'").replaceAll("–", "-").trim();
     // console.log(cardName);
     let cardResult = dataYGOPRODECK.find(
       (element) => element.name === cardName
     );
     // console.log(cardResult);
 
-    return `${cardResult == undefined ? cardName : cardResult.id}\n`.repeat(
+    return `${cardResult === undefined ? cardName : cardResult.id}\n`.repeat(
       numberCards
     );
   }
@@ -136,31 +144,46 @@ function getID(text) {
 async function previewList(filetext) {
   let infos = filetext.split("\n\n");
   infos = infos.map((element) => element.split("\n"));
-  let main = infos[0]
-    .map((element) => getID(element).split("\n"))
-    .flat()
-    .filter((element) => element !== "");
-  let spell_traps = infos[1]
-    .map((element) => getID(element).split("\n"))
-    .flat()
-    .filter((element) => element !== "");
-  let extra = infos[2]
-    .map((element) => getID(element).split("\n"))
-    .flat()
-    .filter((element) => element !== "");
+  let main =
+    infos[0] === undefined
+      ? []
+      : infos[0]
+          .map((element) => getID(element).split("\n"))
+          .flat()
+          .filter((element) => element !== "");
+  let extra =
+    infos[1] === undefined
+      ? []
+      : infos[1]
+          .map((element) => getID(element).split("\n"))
+          .flat()
+          .filter((element) => element !== "");
+  let side =
+    infos[2] === undefined
+      ? []
+      : infos[2]
+          .map((element) => getID(element).split("\n"))
+          .flat()
+          .filter((element) => element !== "");
   // console.log(main);
   document.querySelector(".card-body").innerHTML = `
   
   ${main
-    .concat(spell_traps)
     .map(
       (id) =>
         `<img src="https://pikashi974.github.io/Tierlist/src/img/${id}.jpg" width="100%" height="100%" alt="${id}" title="${id}">`
     )
     .join("")}`;
 
-  document.querySelector(".card-footer").innerHTML = `
+  document.querySelector("#footerExtra").innerHTML = `
     ${extra
+      .map(
+        (id) =>
+          `<img src="https://pikashi974.github.io/Tierlist/src/img/${id}.jpg" width="100%" height="100%" alt="${id}" title="${id}">`
+      )
+      .join("")}`;
+  document.querySelector("#footerSide").innerHTML = `
+    ${side
       .map(
         (id) =>
           `<img src="https://pikashi974.github.io/Tierlist/src/img/${id}.jpg" width="100%" height="100%" alt="${id}" title="${id}">`
