@@ -1,15 +1,15 @@
 {
   "files": {
     "main.css": "/yugioh-converter/static/css/main.37318c5e.css",
-    "main.js": "/yugioh-converter/static/js/main.8cdad3f1.js",
+    "main.js": "/yugioh-converter/static/js/main.b59d86b8.js",
     "static/js/488.6580048c.chunk.js": "/yugioh-converter/static/js/488.6580048c.chunk.js",
     "index.html": "/yugioh-converter/index.html",
     "main.37318c5e.css.map": "/yugioh-converter/static/css/main.37318c5e.css.map",
-    "main.8cdad3f1.js.map": "/yugioh-converter/static/js/main.8cdad3f1.js.map",
+    "main.b59d86b8.js.map": "/yugioh-converter/static/js/main.b59d86b8.js.map",
     "488.6580048c.chunk.js.map": "/yugioh-converter/static/js/488.6580048c.chunk.js.map"
   },
   "entrypoints": [
     "static/css/main.37318c5e.css",
-    "static/js/main.8cdad3f1.js"
+    "static/js/main.b59d86b8.js"
   ]
 }
