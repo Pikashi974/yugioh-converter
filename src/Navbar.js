@@ -11,9 +11,12 @@ export default function NavbarApp() {
 
         <div className="collapse navbar-collapse" id="navbarColor01">
           <NavDropdown title="Yu-Gi-Oh">
-            <NavDropdown.Item href="./Tierlist">Tierlist</NavDropdown.Item>
-            <NavDropdown.Item href="./Numbers-Evaille">
+            <NavDropdown.Item href="/Tierlist">Tierlist</NavDropdown.Item>
+            <NavDropdown.Item href="/Numbers-Evaille">
               Numbers Eveil
+            </NavDropdown.Item>
+            <NavDropdown.Item href="/yugioh-converter">
+              Yu-Gi-Oh Converter
             </NavDropdown.Item>
           </NavDropdown>
         </div>
