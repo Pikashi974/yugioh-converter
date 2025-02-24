@@ -1,4 +1,10 @@
 import logo from "./logo.svg";
+import "bootswatch/dist/united/bootstrap.min.css";
+import Container from "react-bootstrap/Container";
+import Nav from "react-bootstrap/Nav";
+import Navbar from "react-bootstrap/Navbar";
+import NavDropdown from "react-bootstrap/NavDropdown";
+
 import { useState } from "react";
 import "./App.css";
 
@@ -26,6 +32,23 @@ function App() {
 
   return (
     <div className="App">
+      <Navbar
+        className="navbar navbar-expand-lg bg-primary"
+        data-bs-theme="dark"
+      >
+        <Container>
+          <Navbar.Brand href="/">Yu-Gi-Oh Converter</Navbar.Brand>
+
+          <div className="collapse navbar-collapse" id="navbarColor01">
+            <NavDropdown title="Yu-Gi-Oh">
+              <NavDropdown.Item href="./Tierlist">Tierlist</NavDropdown.Item>
+              <NavDropdown.Item href="./Numbers-Evaille">
+                Numbers Eveil
+              </NavDropdown.Item>
+            </NavDropdown>
+          </div>
+        </Container>
+      </Navbar>
       <header className="App-header">
         <h1>Yu-Gi-Oh Converter</h1>
         <form id="form" onSubmit={handleSubmit}>
