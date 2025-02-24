@@ -127,7 +127,9 @@ function getID(text) {
     );
     // console.log(cardResult);
 
-    return `${cardResult.id}\n`.repeat(numberCards);
+    return `${cardResult == undefined ? cardName : cardResult.id}\n`.repeat(
+      numberCards
+    );
   }
   return "";
 }
