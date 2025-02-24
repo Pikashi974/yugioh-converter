@@ -50,7 +50,7 @@ function App() {
 
   return (
     <div className="App">
-      <form id="form" onSubmit={handleSubmit}>
+      <form id="form" className="m-3" onSubmit={handleSubmit}>
         <div className="row">
           <label className="col-sm-2 col-form-label">Name:</label>
           <div className="col-sm-10">
