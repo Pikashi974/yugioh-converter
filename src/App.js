@@ -1,12 +1,25 @@
 // import logo from "./logo.svg";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
   const [answer, setAnswer] = useState("");
   const [name, setName] = useState("");
   const [error, setError] = useState(null);
+
+  const [data, setData] = useState(require("./data.json"));
+
+  async function getData() {
+    return await fetch("https://db.ygoprodeck.com/api/v7/cardinfo.php")
+      .then((response) => response.json())
+      .then((json) => {
+        setData(json.data);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  }
 
   const gridStyle = {
     gridTemplateColumns: "auto auto auto auto",
@@ -24,7 +37,7 @@ function App() {
         document.querySelector("textarea").classList.add("is-invalid");
       }
       if (name !== "" && answer !== "") {
-        await convertText(answer, name);
+        convertText(answer, name, data);
       }
     } catch (err) {
       setError(err);
@@ -44,9 +57,12 @@ function App() {
   async function handlePreview(e) {
     e.preventDefault();
     try {
-      await previewList(answer, name);
+      await previewList(answer, data);
     } catch (error) {}
   }
+  useEffect(() => {
+    getData();
+  }, []);
 
   return (
     <div className="App">
@@ -103,25 +119,32 @@ function App() {
   );
 }
 
-async function convertText(filetext, deckname) {
+function convertText(filetext, deckname, data) {
   //   let fileData = await fetch(filetext).then((res) => res.text());
 
   //   console.log(filetext);
   let infos = filetext.split("\n\n");
   infos = infos.map((element) => element.split("\n"));
+  console.log(infos);
   //   console.log(infos);
   let cardOutput = `#created by Javascript\n#main\n${infos[0]
-    .map((element) => getID(element))
-    .join("")}\n#extra\n${infos[1]
-    .map((element) => getID(element))
-    .join("")}\n!side\n${infos[2].map((element) => getID(element)).join("")}
-
+    .map((element) => getID(element, data))
+    .join("")}\n#extra\n${
+    infos.length > 1
+      ? infos[1].map((element) => getID(element, data)).join("")
+      : ""
+  }\n!side\n${
+    infos.length === 3
+      ? infos[2].map((element) => getID(element, data)).join("")
+      : ""
+  }
 `;
   saveData(cardOutput, deckname + ".ydk");
 }
 
-function getID(text) {
-  const dataYGOPRODECK = require("./data.json");
+function getID(text, data) {
+  // console.log(text);
+
   if (text.match(/([0-9]+) ([^\n]+)/)[0] != null) {
     // console.log(text.match(/([0-9]+) ([^\n]+)/)[0]);
 
@@ -130,9 +153,7 @@ function getID(text) {
     let cardName = text.match(/([0-9]+) ([^\n]+)/)[2];
     cardName = cardName.replaceAll("’", "'").replaceAll("–", "-").trim();
     // console.log(cardName);
-    let cardResult = dataYGOPRODECK.find(
-      (element) => element.name === cardName
-    );
+    let cardResult = data.find((element) => element.name === cardName);
     // console.log(cardResult);
 
     return `${cardResult === undefined ? cardName : cardResult.id}\n`.repeat(
@@ -141,28 +162,28 @@ function getID(text) {
   }
   return "";
 }
-async function previewList(filetext) {
+async function previewList(filetext, data) {
   let infos = filetext.split("\n\n");
   infos = infos.map((element) => element.split("\n"));
   let main =
     infos[0] === undefined
       ? []
       : infos[0]
-          .map((element) => getID(element).split("\n"))
+          .map((element) => getID(element, data).split("\n"))
           .flat()
           .filter((element) => element !== "");
   let extra =
     infos[1] === undefined
       ? []
       : infos[1]
-          .map((element) => getID(element).split("\n"))
+          .map((element) => getID(element, data).split("\n"))
           .flat()
           .filter((element) => element !== "");
   let side =
     infos[2] === undefined
       ? []
       : infos[2]
-          .map((element) => getID(element).split("\n"))
+          .map((element) => getID(element, data).split("\n"))
           .flat()
           .filter((element) => element !== "");
   // console.log(main);
